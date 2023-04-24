@@ -1,0 +1,98 @@
+<div class="content">
+  <select (change)="getTicketsTacheBySprint($event.target.value)">
+    <option value="">-- Sélectionner un sprint --</option>
+    <option *ngFor="let sprint of sprints; index as i" [value]="sprint.id"> {{'Sprint '+(i+1)}} {{sprint.etat}} </option>
+  </select>
+
+  <div class="row" *ngIf="ticketsTache">
+    <div class=" col-md-4 vh-100 d-flex" >
+      <div class="card">
+        <div class=" card-header">
+          <h4 class=" card-title">A faire</h4>
+        </div>
+        <div id="à faire" class="card-body" style="overflow-y:auto;max-height:700px;">
+          <span *ngFor="let tache of ticketsTache"  
+            [draggable]="true"
+            (dragend)="onDragEnd($event,tache)"
+            (drop)="onDrop($event, tache)">
+          <ngb-alert [type]="'info'" *ngIf="tache.etat === 'à faire'" [dismissible]="false">
+            <span>                 
+              <b>{{tache.titre}} </b> De {{tache.dateLancement |date}} à {{tache.dateFin |date}}
+              <button mat-icon-button *ngIf="tache.membreId==null" [matMenuTriggerFor]="menu" (click)="prendreTicket(tache.id)" style="border:1px solidblack;" aria-label="Example icon-button with a menu">
+                <mat-icon>person_add</mat-icon>
+              </button>
+              <button mat-icon-button *ngIf="tache.membreId!=null" [matMenuTriggerFor]="menu" (click)="verifierPersPris(tache.membre)" style="border:1px solidblack;" aria-label="Example icon-button with a menu">
+                <mat-icon>how_to_reg</mat-icon>
+              </button> 
+            </span>
+          </ngb-alert>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4" style="overflow-y:auto;">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">En cours</h4>
+        </div>
+        <div id="en cours" class="card-body" style="overflow-y:auto;max-height: 500px;">
+        <span *ngFor="let tache of ticketsTache" [draggable]="true" (drop)="onDrop($event, tache)">
+          <ngb-alert *ngIf="tache.etat === 'en cours'" [type]="'warning'" [dismissible]="false">
+            <span>
+              <b>{{tache.titre}} </b> De {{tache.dateLancement |date}} à {{tache.dateFin |date}}
+            </span>
+          </ngb-alert>
+        </span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-4">
+      <div class="card" >
+        <div class=" card-header" >
+          <h4 class=" card-title">Terminé</h4>
+        </div>
+      
+        <div id="terminé" class="card-body" style="overflow-y:auto;max-height: 454px;">
+        
+          <span *ngFor="let tache of ticketsTache" [draggable]="true" (drop)="onDrop($event, tache)">
+          <ngb-alert *ngIf="tache.etat === 'terminé'" [type]="'primary'" [dismissible]="false">
+            <ng-container [diabled]="tache.etat == 'terminé'">
+            <span>
+              <b>{{tache.titre}} </b> De {{tache.dateLancement |date}} à {{tache.dateFin |date}}
+            </span>
+          </ng-container>
+          </ngb-alert>
+          </span>
+       
+        </div>
+      </div>
+    </div>
+
+    <div class=" col-md-8 offset-md-4"  style="margin-top:-19%;">
+      <div class="card">
+        <div class="card-body" style="overflow-x:auto;max-width:100%">
+          <div class=" places-buttons">
+            <div class=" row">
+              <div class=" col-md-6 ml-auto mr-auto text-center">
+                <h4 class=" card-title">A verifier</h4>
+              </div>
+            </div>
+            <div id="à vérifier" class="card-body" style="overflow-y:auto;max-height: 454px;">
+              <span *ngFor="let tache of ticketsTache" [draggable]="true" (drop)="onDrop($event, tache)">
+              <ngb-alert *ngIf="tache.etat === 'à vérifier'" [type]="'danger'" [dismissible]="false">
+                <span>
+                  <b>{{tache.titre}} </b> De {{tache.dateLancement |date}} à {{tache.dateFin |date}}
+                </span>
+              </ngb-alert>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

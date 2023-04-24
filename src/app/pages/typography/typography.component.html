@@ -1,0 +1,10 @@
+
+<div class="content">
+  
+  <div class="conteneur">
+  <app-contenaire-message [reponseActuelle]="reponseActuelle"></app-contenaire-message>
+  </div>
+  <div class="input">
+  <app-input-chat (reponseSent)="handleReponse($event)" ></app-input-chat>
+  </div>
+</div>
