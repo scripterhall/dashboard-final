@@ -18,7 +18,7 @@ export class TablesComponent implements OnInit {
   formData:FormData = new FormData();
   folderName:string;
   verus:boolean=true
-  projetDos:Dossier[]
+  projetDos:Dossier[]=[];
   constructor(
     private toastr: ToastrService,
     private dossierService:DossierService,
@@ -35,6 +35,9 @@ export class TablesComponent implements OnInit {
          this.projetDos = data
         console.log(data);
         
+      },
+      error =>{
+        
       }
     )
   }
@@ -47,7 +50,7 @@ export class TablesComponent implements OnInit {
       totalSize += files[i].size;
     }
 
-    if (totalSize > 300000000) {
+    if (totalSize >  30000000) {
       console.log("error");
       this.toastr.error("ce fichier contient plus que 300MB")
       event.target.value = '';

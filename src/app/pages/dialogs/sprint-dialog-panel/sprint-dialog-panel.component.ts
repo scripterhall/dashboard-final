@@ -11,6 +11,7 @@ import { SprintService } from 'src/app/service/sprint.service';
 import { TicketTacheService } from 'src/app/service/ticket-tache.service';
 import Swal from 'sweetalert2';
 import { DialogData } from '../../icons/icons.component';
+import { CorbeilleService } from 'src/app/service/corbeille.service';
 
 
 
@@ -31,6 +32,7 @@ export class SprintDialogPanelComponent implements OnInit{
   constructor( public dialogRef: MatDialogRef<SprintDialogPanelComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb:FormBuilder,
+    private corbeilleService:CorbeilleService,
     private sprintService:SprintService,
     private ticketTacheService:TicketTacheService,
     private histoireTicketService:HistoireTicketService,
@@ -181,35 +183,77 @@ export class SprintDialogPanelComponent implements OnInit{
 
   //ajouter une ticket tache dans le panel de detail sprint
   ajouterTicketTache(ht:TicketHistoire){
-
+    const membre = JSON.parse(localStorage?.getItem("membre"))
     console.log(this.ticketTacheForm.value)
     let ticketTache:TacheTicket = this.ticketTacheForm.value
     ticketTache.ht = ht
     ticketTache.sprintBacklogId = null
     ticketTache.ticketHistoireId = ht.id;
+    ticketTache.membreId = membre.id;
+    ticketTache.membre = membre;
     console.log(ticketTache);
-    this.ticketTacheService.ajouterTicketTache(ticketTache).subscribe(
-      data =>{
-
-
-        console.log(data);
-        this.ticketTacheList.push(data);
-        this.ajouterTick = false;
-        this.ticketTacheForm.reset()
-      },
-      error => {
-        Swal.fire(
-          'erreur d enregistrement',
-          'vous avez deja une ticket avec ce titre et cette description',
-          'error'
-        )
-        this.ticketTacheForm.reset()
+    const productBacklog = JSON.parse(localStorage?.getItem('productBacklogCourant'));
+    this.corbeilleService.getTacheCorbeilleByMembreId(membre.id).subscribe(
+      dataCorbeille => {
+        dataCorbeille = dataCorbeille.filter(tache => tache.ht.productBacklogId == productBacklog.id)
+        const findTache = dataCorbeille.find(tache => tache.titre == ticketTache.titre && tache.description == ticketTache.description)
+        if(findTache)
+            Swal.fire({
+              title: "cette tâche existe déjà dans votre corbeille \n elle va être ajouter ;",
+              icon: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Oui, Lancer!',
+              cancelButtonText: 'Annuler',
+              backdrop: 'rgba(0,0,0,0.4)',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              allowEnterKey: false,
+              focusConfirm: false
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.corbeilleService.deleteTacheFromCorbeille(findTache.id,"local").subscribe(
+                  data => {
+                    this.ticketTacheList.push(findTache);
+                  }
+                );
+              }else{
+                Swal.fire(
+                  'insertion annulé',
+                  'Cette tâche existe dans votre corbeille.',
+                  'error'
+                )
+              }
+            })
+        else
+          this.ticketTacheService.ajouterTicketTache(ticketTache).subscribe(
+            data =>{
+              console.log(data);
+              this.ticketTacheService.affecterTicketAMembre(membre,data.id).subscribe(
+                dataTicket=>{
+                  console.log("affecter : ",dataTicket);    
+                })
+              this.ticketTacheList.push(data);
+              this.ajouterTick = false;
+              this.ticketTacheForm.reset()
+            },
+            error => {
+              Swal.fire(
+                'erreur d\'insertion',
+                'vous avez déjà une ticket avec ce titre et cette description',
+                'error'
+              )
+              this.ticketTacheForm.reset()
       }
     )
-  }
+  })
+}
 
   //supprimer une ticket tache dans le panel de details sprint
   supprimerTicketTache(i:number){
+    console.log(this.ticketTacheList[i].id);
+    
     if(confirm('vous êtes sur de supprimer cette tâche !'))
       this.ticketTacheService.supprimerTicketTache(this.ticketTacheList[i].id).subscribe(
         data =>{

@@ -117,12 +117,6 @@ export class InscriptionComponent implements OnInit {
   enregistrerMembre(membre:Membre){
     this.membreService.inscription(membre).subscribe(
       data => {
-        if(!data)
-          Swal.fire(
-            'Attention !',
-            'Vous avez déjà un compte',
-            'error'
-          )
           Swal.fire(
             'Merci !',
             'l\'inscription est realiser avec succes',
@@ -132,7 +126,16 @@ export class InscriptionComponent implements OnInit {
               this.router.navigateByUrl('/auth')
             }
           )
-      })
+      },
+      error =>{
+        Swal.fire(
+          'Attention !',
+          'Vous avez déjà un compte',
+          'error'
+        )
+      }
+      
+      )
   }
 
 

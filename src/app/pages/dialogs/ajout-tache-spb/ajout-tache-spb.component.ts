@@ -80,13 +80,15 @@ export class AjoutTacheSpbComponent implements OnInit {
               data => {
                 this.ticketTacheService.affecterTicketAMembre(membre,data.id).subscribe(
                   dataApresAffectation =>{
+                    console.log(dataApresAffectation);
                     data.dateFin = dataApresAffectation.dateFin
                     data.dateLancement = dataApresAffectation.dateLancement
                     data.membre = dataApresAffectation.membre
                     data.membreId = dataApresAffectation.membreId
+                    this.dialogRef.close(data);
                   }
                 )
-                this.dialogRef.close(data);
+                
               },
               error =>{
                 Swal.fire(

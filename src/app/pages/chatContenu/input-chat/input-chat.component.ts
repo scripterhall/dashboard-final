@@ -20,16 +20,43 @@ export class InputChatComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.questionForm = this.fb.group({
-      text:["",[Validators.required,this.questionValidateur()]],
-      membreId:1
-    })
+    if(localStorage.getItem("membre")){
+      const membre = JSON.parse(localStorage.getItem("membre"))
+      this.questionForm = this.fb.group({
+        text:["",[Validators.required,this.questionValidateur()]],
+        membreId:membre.id
+      })
+    }
   }
 
   questionValidateur(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
+      const scrumTeacher = [
+      "product owner",
+      "scrum master",
+      "sprint backlog",
+      "equipe de developpement",
+      "scrum guide",
+      "product backlog",
+      "productbacklog",
+      "sprintbacklog",
+      "sprint",
+      "timebox",
+      "burn-up chart",
+      "burn-down chart",
+      "daily meet",
+      "sprint planning",
+      "sprint retrospective",
+      "sprint review",
+      "cahier de charge",
+      "agile",
+      "scrum",
+      "projet scrum",
+      "test scrum",
+      "agilité",  
+    ]
       const value = control.value;
-      if (value && !value.endsWith('?')) {
+      if (value && !scrumTeacher.some(element => value.includes(element))) {
         return { 'question': true };
       }
       return null;

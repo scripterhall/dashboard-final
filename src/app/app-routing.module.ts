@@ -9,6 +9,7 @@ import { SelectProjetComponent } from "./pages/select-projet/select-projet.compo
 import { DecisionComponent } from "./pages/decision/decision.component";
 import { InscriptionComponent } from "./auth/inscription/inscription.component";
 import { AuthentificationComponent } from "./auth/authentification/authentification.component";
+import { SelectProjetMembreComponent } from "./pages/select-projet-membre/select-projet-membre.component";
 
 const routes: Routes = [
   {
@@ -38,6 +39,10 @@ const routes: Routes = [
   {
     path:"liste-projet",
     component:SelectProjetComponent
+  },
+  {
+    path:"liste-projet-membre",
+    component:SelectProjetMembreComponent
   },
   {
     path:"inscription",

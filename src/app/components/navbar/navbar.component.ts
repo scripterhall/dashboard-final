@@ -284,7 +284,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   }
 
+  navigationProjet(){
 
+  }
+  logOut(){
+    
+  }
 
 
 

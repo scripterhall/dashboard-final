@@ -9,22 +9,24 @@
             <a href=""> </a>
           </p>
         </div>
-        <div class=" card-body all-icons" >
+        <div class=" card-body " >
           <div class=" row ">
             <!--sprint-->
             <div
-              (click)="openDialogDetailsSprint(i,sp)"
               [@slideInSprint]
                class="m-small sprint font-icon-list col-lg-2 col-md-2 col-sm-2 col-xs-6 col-xs-6"
               *ngFor="let sp of sprints;index as i"
               style="cursor: pointer"
             >
-              <div class=" font-icon-detail">
+              <div (click)="openDialogDetailsSprint(i,sp)" class=" font-icon-detail">
 
                 <i class="fas fa-tasks" style="margin-bottom: 3%;"></i>
                 <br>
                 <p style="margin-top:2px;">C'est votre sprint <strong>{{i+1}}</strong></p>
               </div>
+          
+              <button class="btn-terminer w-100" *ngIf="sp.etat!='termine' && verifDate(sp)"  (click)="terminerSprint(sp)" style="height:11%;" >Terminer sprint</button>
+              <button class="btn-done w-100" *ngIf="sp.etat=='termine'" matTooltip="sprint terminé" style="height:11%;" disabled><mat-icon>done_outline</mat-icon></button>
             </div>
             <!--end-->
             <!--button pour ajouter sprint-->

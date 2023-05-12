@@ -95,7 +95,6 @@ export class InvitationComponent implements OnInit {
 
     this.rolePkForm.get('membreId').valueChanges.subscribe(
       membreId=>{
-        
         const membre = this.membreList.find(membre => membre.id == membreId)
         this.invitationForm.patchValue({ emailInvitee: membre.email || null });
         this.invitationForm.patchValue({membreId:membreId || null})
@@ -108,6 +107,8 @@ export class InvitationComponent implements OnInit {
         this.roleForm.patchValue({ description: this.descriptionMap.get(typeNumber) || null });
       }
     )
+
+    
   }
 
 

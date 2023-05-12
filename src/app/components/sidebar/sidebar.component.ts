@@ -30,7 +30,6 @@ export const ROUTES: RouteInfo[] = [
     rtlTitle: "مهام سبرنت",
     icon: "icon-tie-bow",
     class: "" ,
-    disabled: true
   },
   {
     path: "/scrumBoard",
@@ -41,7 +40,7 @@ export const ROUTES: RouteInfo[] = [
   },
 
   {
-    path: "/user",
+    path: "/visioConference",
     title: "visio conférence",
     rtlTitle: "مؤتمر عبر الفيديو",
     icon: "icon-video-66",
@@ -59,13 +58,21 @@ export const ROUTES: RouteInfo[] = [
     title: "Scrum teacher",
     rtlTitle: "طباعة",
     icon: "icon-align-center",
-    class: ""
+    class: "",
+    disabled:JSON.parse(localStorage.getItem("chef-projet"))!=null
   },
   {
     path: "/rtl",
     title: "RTL Support",
     rtlTitle: "ار تي ال",
     icon: "icon-world",
+    class: ""
+  },
+  {
+    path: "/corbeille",
+    title: "corbeille",
+    rtlTitle: "ار تي ال",
+    icon: "icon-trash-simple",
     class: ""
   }
 ];
@@ -79,40 +86,40 @@ export class SidebarComponent implements OnInit {
   menuItems: any[];
 
   constructor(
-    private sprintService: SprintService
+   // private sprintService: SprintService
   ) {}
 
   sprintLancee:number
   ngOnInit() {
-    this.sprintService.getListSprintsByProductBacklog(JSON.parse(localStorage.getItem('productBacklogCourant')).id)
-    .subscribe(
-      data => {
-        this.sprintLancee = data.filter(sprint => sprint.etat == "en cours")?.length
-        this.menuItems = ROUTES.map((menuItem) =>
-        menuItem.path === "/maps"
-          ? {
-              ...menuItem,
-              disabled: this.sprintLancee == 0,
-            }
-          : menuItem
-      );
-      }
-    )
-   // this.menuItems = ROUTES.filter(menuItem => menuItem);
+    // this.sprintService.getListSprintsByProductBacklog(JSON.parse(localStorage.getItem('productBacklogCourant')).id)
+    // .subscribe(
+    //   data => {
+    //     this.sprintLancee = data.filter(sprint => sprint.etat == "en cours")?.length
+    //     this.menuItems = ROUTES.map((menuItem) =>
+    //     menuItem.path === "/maps"
+    //       ? {
+    //           ...menuItem,
+    //           disabled: this.sprintLancee == 0,
+    //         }
+    //       : menuItem
+    //   );
+    //   }
+    // )
+   this.menuItems = ROUTES.filter(menuItem => menuItem);
   }
 
-  ngOnChanges() {
-    if (this.sprintLancee != 0) {
-      this.menuItems = ROUTES.map((menuItem) =>
-      menuItem.path === "/maps"
-        ? {
-            ...menuItem,
-            disabled: false,
-          }
-        : menuItem
-    );
-    }
-  }
+  // ngOnChanges() {
+  //   if (this.sprintLancee != 0) {
+  //     this.menuItems = ROUTES.map((menuItem) =>
+  //     menuItem.path === "/maps"
+  //       ? {
+  //           ...menuItem,
+  //           disabled: false,
+  //         }
+  //       : menuItem
+  //   );
+  //   }
+  // }
 
   isMobileMenu() {
     if (window.innerWidth > 991) {

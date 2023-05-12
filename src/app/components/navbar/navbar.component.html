@@ -50,6 +50,16 @@
         </li>
         <!-- end -->
 
+        <!-- corbeille -->
+
+        <!--<li class=" nav-item">
+          <a  class=" nav-link btn btn-link" routerLink="/corbeille" ngbDropdownItem>
+            <mat-icon>delete_outline</mat-icon>
+          </a>
+        </li> -->
+
+        <!-- end -->
+
 
         <li class=" nav-item" ngbDropdown>
           <a
@@ -96,18 +106,18 @@
           </a>
           <ul class=" dropdown-navbar" ngbDropdownMenu>
             <li class=" nav-link">
-              <a class=" nav-item" href="javascript:void(0)" ngbDropdownItem>
-                Profile
+              <a class=" nav-item" (click)="navigationProjet()" ngbDropdownItem>
+                Liste de projet
               </a>
             </li>
             <li class=" nav-link">
-              <a class=" nav-item" href="javascript:void(0)" ngbDropdownItem>
+              <a class=" nav-item" routerLink="/user" ngbDropdownItem>
                 Settings
               </a>
             </li>
             <li class=" dropdown-divider"></li>
             <li class=" nav-link">
-              <a class=" nav-item" href="javascript:void(0)" ngbDropdownItem>
+              <a class=" nav-item" (click)="logOut()" ngbDropdownItem>
                 Log out
               </a>
             </li>

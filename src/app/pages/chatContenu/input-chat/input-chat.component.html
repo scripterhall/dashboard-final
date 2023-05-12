@@ -15,8 +15,8 @@
     </button>
     </div>
     <mat-error 
-    *ngIf="questionForm.get('text').hasError('question') && this.questionForm.get('text').touched">
-    votre question doit se terminer par le caractère '?'.
+    *ngIf="questionForm.get('text').hasError('question') && this.questionForm.get('text').touched && this.questionForm.get('text').dirty" >
+    votre question ne concerne pas des sujets scrum.
     </mat-error>
 </form>
 </div>

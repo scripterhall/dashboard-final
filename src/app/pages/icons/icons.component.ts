@@ -63,10 +63,7 @@ import Swal from "sweetalert2";
         style({ transform: 'translateX(12%)' }),
         animate('0.6s ease-in-out', style({ transform: 'translateX(0%)' }))
       ]),
-      transition(':leave', [
-        style({ transform: 'translateX(0)' }),
-        animate('0.6s ease-in-out', style({ transform: 'translateX(-100%)' }))
-      ])
+      
     ])
   ]
 
@@ -204,8 +201,8 @@ removeUserStoryFromProductBacklog(id: number) {
       data =>{
         this.histoireTicketsSprint = data
         const dialogRef = this.dialog.open(SprintDialogPanelComponent,{
-          width: '500px',
-          height:'600px',
+          width: '50%',
+          height:'80%',
           data: {sprint:this.sprints[i],
                 TicketHistoires:this.histoireTicketsSprint,
                 canStart :test
@@ -409,5 +406,34 @@ removeUserStoryFromProductBacklog(id: number) {
         return sprint && sprint.etat === 'en cours';
       }
     }
+
+
+    terminerSprint(sprint:Sprint){
+    console.log(new Date().getHours());
+      if(sprint.etat == 'en cours'){
+      sprint.etat = "termine"
+      this.sprintService.modifierSprint(sprint).subscribe(
+        data=>{
+          let sprint = this.sprints.find(sp => sp.id == data.id)
+          sprint.etat = data.etat
+        }
+      )
+    }else{
+      Swal.fire(
+        'Attention',
+        'Sprint n\'est pas lancé pour le terminer',
+        'warning'
+      )
+    }
+  }
+
+  verifDate(sprint:Sprint){
+    const aujourdhui = new Date()
+    sprint.dateLancement= new Date(sprint.dateLancement)    
+    return  sprint.dateLancement.getFullYear() === aujourdhui.getFullYear() &&
+    sprint.dateLancement.getMonth() === aujourdhui.getMonth() &&
+    sprint.dateLancement.getDate() === aujourdhui.getDate()&&
+    aujourdhui.getHours()<23
+  }
 
   }

@@ -59,7 +59,9 @@ import { AuthentificationComponent } from './auth/authentification/authentificat
 import { SearchPanelComponent } from './pages/dialogs/search-panel/search-panel.component';
 import { ConsuletMembrePanelComponent } from './pages/dialogs/consulet-membre-panel/consulet-membre-panel.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { CorbeilleComponent } from './pages/corbeille/corbeille.component';
+import { ProjetKeyComponent } from './pages/dialogs/projet-key/projet-key.component';
+import { ModifierProfileComponent } from './pages/modifier-profile/modifier-profile.component';
+import { SelectProjetMembreComponent } from './pages/select-projet-membre/select-projet-membre.component';
 
 
 @NgModule({
@@ -108,7 +110,7 @@ import { CorbeilleComponent } from './pages/corbeille/corbeille.component';
     UpdateUserStoryDialogComponent,
     ScrumBoardComponent,
     DecisionComponent,
-    InvitationComponent, PerformanceCourbeComponent, InscriptionComponent, AuthentificationComponent, SearchPanelComponent, ConsuletMembrePanelComponent, CorbeilleComponent
+    InvitationComponent, PerformanceCourbeComponent, InscriptionComponent, AuthentificationComponent, SearchPanelComponent, ConsuletMembrePanelComponent, ProjetKeyComponent, ModifierProfileComponent, SelectProjetMembreComponent
     ],
   providers: [],
   bootstrap: [AppComponent]

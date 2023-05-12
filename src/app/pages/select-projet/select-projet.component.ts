@@ -15,6 +15,8 @@ import { RoleService } from 'src/app/service/role.service';
 import Swal from 'sweetalert2';
 import { emailValidator, emailExistsValidator,roleExists } from './email-exists.validator';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjetKeyComponent } from '../dialogs/projet-key/projet-key.component';
 
 export interface ExampleTab {
   label: string;
@@ -24,6 +26,10 @@ export interface ExampleTab {
 interface Request {
   invitation: Invitation;
   projet: Projet;
+}
+
+export interface ClesProjet {
+  projet:Projet
 }
 
 @Component({
@@ -118,6 +124,7 @@ export class SelectProjetComponent implements OnInit {
 
         const membre = this.membreList.find(membre => membre.id == membreId)
         this.invitationForm.patchValue({ emailInvitee: membre.email || null });
+        this.invitationForm.get('emailInvitee').disable()
         this.invitationForm.patchValue({membreId:membreId || null})
       }
     )
@@ -142,6 +149,7 @@ export class SelectProjetComponent implements OnInit {
   constructor(private projetService: ProjetServiceService,
               private formBuilder: FormBuilder,
               private toastr: ToastrService,
+              private keyMatDialogue:MatDialog,
               private formBuilder2: FormBuilder,
               private roleService: RoleService,
               private invitationService: InvitationService,
@@ -171,19 +179,14 @@ export class SelectProjetComponent implements OnInit {
 
 /*   boutton gerer de content 1  */
   gerer(index:number){
-    if(confirm("Vous etes sûr de gerer le projet "+this.projets[index].nom+" !!")){
-    localStorage.setItem('projet', JSON.stringify(this.projets[index]));
-    this.productBacklogService.getProductBacklogByIdProjet(this.projets[index].id).subscribe(
-      data => {
-        const productBacklog = data;
-        localStorage.setItem('productBacklogCourant', JSON.stringify(productBacklog));
-        this.router.navigateByUrl('/dashboard');
-      },
-      error => {
-        console.log('Une erreur s\'est produite lors de la récupération du product backlog : ', error);
+    const dialogRef = this.keyMatDialogue.open(ProjetKeyComponent,{
+      width: '50%',
+      height:'25%',
+      data: {
+        projet:this.projets[index]
       }
-    );
-    }
+    });
+    
   }
 
   /*   annuler* ou gerer  */

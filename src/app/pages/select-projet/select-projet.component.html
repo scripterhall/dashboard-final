@@ -4,7 +4,6 @@
       <ng-container *ngIf="(asyncTabs | async) === null">
         Loading tabs...
       </ng-container>
-
       <mat-tab-group>
         <mat-tab class="card-header" *ngFor="let tab of asyncTabs | async">
           <ng-template mat-tab-label>{{tab.label}}</ng-template>
@@ -12,7 +11,7 @@
             <!-- block proger a gerer -->
             <mat-list class="my-list" *ngIf="tab.content=='Content 1'">
               <div mat-subheader style="color:rgb(238, 238, 238)">projets</div>
-              <mat-list-item class="projet" (click)="cocherProjet(i)" *ngFor="let projet of projets;index as i">
+              <mat-list-item class="projet"  *ngFor="let projet of projets;index as i">
                 <mat-icon matListItemIcon style="color:rgb(238, 238, 238)">folder</mat-icon>
                 <div matListItemTitle style="color:rgb(238, 238, 238)">
                   {{projet.nom}}
@@ -150,9 +149,9 @@
                   </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <mat-form-field appearance="fill">
+                <mat-form-field  appearance="fill">
                   <mat-label>e-mail</mat-label>
-                  <input formControlName="emailInvitee"  [disabled]="this.rolePkForm.get('membreId').value!=null"  matInput>
+                  <input formControlName="emailInvitee"   matInput>
                   <mat-error *ngIf="invitationForm.get('emailInvitee').touched && invitationForm.get('emailInvitee').hasError('required')">le champ email est obligatoire</mat-error>
                   <mat-error *ngIf="invitationForm.get('emailInvitee').dirty && invitationForm.get('emailInvitee').errors?.emailExists">vous avez déjà envoyé une invitation a ce mail</mat-error>
                   <mat-hint class="text-warning" *ngIf="invitationForm.get('emailInvitee').dirty && invitationForm.get('emailInvitee').errors?.invalidEmail">vous devez respecter les regle de nommage d'un mail "@"  et "."</mat-hint>

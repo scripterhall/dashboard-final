@@ -5,6 +5,10 @@
     <button mat-stroked-button *ngIf="data.sprint.etat !='terminer'"  (click)="lancerSprintForcer()" class="p-2 m-1" [disabled]="data.sprint.etat=='en cours' || this.data.canStart || this.data.TicketHistoires.length==0 " color="primary">Lancer
       Sprint</button>
     </ng-container>
+    
+    <span *ngIf="data.sprint.etat =='en cours'" class="etat text-infos" >En cours</span>
+    <span *ngIf="data.sprint.etat =='termine'" class="etat text-success">Terminé</span>
+    <span *ngIf="data.sprint.etat =='en attente'" class="etat text-warning">En attente</span>
     <mat-icon class="text-warning m-2" *ngIf="data.sprint.etat=='en cours'">alarm</mat-icon>
   </div>
   <button mat-icon-button class="p-2" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -24,47 +28,7 @@
 
 
 <div mat-dialog-content>
-  <div class="container my-3" *ngIf="modifActif">
-    <form [formGroup]="changeDates" (ngSubmit)="terminerChangement()">
-      <div class="row align-items-center">
 
-        <div class="col-lg-4 col-md-4">
-          <div class="d-flex align-items-center">
-            <span class="badge bg-success me-2">Lancement :</span>
-            <mat-form-field appearance="fill" class="w-100">
-              <input matInput formControlName="dateLancement" [matDatepicker]="picker1" placeholder="Choisir une date">
-              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-              <mat-datepicker #picker1></mat-datepicker>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-2">
-          <div class="d-flex align-items-center justify-content-center">
-            <mat-icon class="text-primary display-4">arrow_forward</mat-icon>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-4">
-          <div class="d-flex align-items-center  d-flex">
-            <span class="badge bg-success me-2">Finalisation :</span>
-            <mat-form-field appearance="fill" class="w-100">
-              <input matInput formControlName="dateFin" [matDatepicker]="picker2" placeholder="Choisir une date">
-              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-              <mat-datepicker #picker2></mat-datepicker>
-              <mat-error *ngIf="changeDates.get('dateFin').hasError('dateFinInvalide')">La date de fin
-                invalide</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-2">
-          <button mat-icon-button [disabled]="changeDates.invalid" color="accent"
-            aria-label="Example icon button with a menu icon">
-            <mat-icon>build</mat-icon>
-          </button>
-        </div>
-
-      </div>
-    </form>
-  </div>
 
   <!-- end -->
 

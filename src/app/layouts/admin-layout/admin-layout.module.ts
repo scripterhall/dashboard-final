@@ -41,8 +41,8 @@ import { ListMembreProjetComponent } from "src/app/pages/list-membre-projet/list
 import { InputChatComponent } from '../../pages/chatContenu/input-chat/input-chat.component';
 import { ContenaireMessageComponent } from '../../pages/chatContenu/contenaire-message/contenaire-message.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { FileDropDirective } from 'ng2-file-upload';
 
+import { CorbeilleComponent } from '../../pages/corbeille/corbeille.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -79,7 +79,7 @@ import { FileDropDirective } from 'ng2-file-upload';
     FireworksComponent,
     TablesComponent,
     IconsComponent,
-    
+    CorbeilleComponent,
     TypographyComponent,
     NotificationsComponent,
     MapComponent,

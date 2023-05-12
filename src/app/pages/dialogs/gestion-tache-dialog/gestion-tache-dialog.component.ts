@@ -95,7 +95,7 @@ export class GestionTacheDialogComponent implements OnInit {
         this.ticketTacheService.modifierTicketTache(this.modifTicketForm.value).subscribe(
           data => {
             Swal.fire(
-              'tâche supprimé',
+              'tâche modifié',
               'Cette tâche a été modifié.',
               'success'
             )
@@ -104,6 +104,13 @@ export class GestionTacheDialogComponent implements OnInit {
               tt:this.modifTicketForm.value
           }
             this.dialogRef.close(modifData);
+          },
+          error =>{
+            Swal.fire(
+              'tâche non modifié',
+              'vous n\'avez rien changer où il ya une \nautre tâche equivalente a cette derniére',
+              'warning'
+            )
           }
         )
         

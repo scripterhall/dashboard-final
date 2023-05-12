@@ -78,8 +78,10 @@ export class HistoireMembreChartComponent implements OnInit   {
       console.log(roles);
       
       this.generateColors(roles.length);
-      for(let role of roles)
-        membres.push(role.membre)
+      for(let role of roles){
+        if(role.status == "ACCEPTE")
+          membres.push(role.membre)
+      }
         this.listMembre = membres
         console.log(membres);
       
@@ -99,6 +101,7 @@ export class HistoireMembreChartComponent implements OnInit   {
               historiesAdded.push(tache.ht);
               memberData.data.push({ x: i, y: tache.ht.id,r:10});
               labels.push(tache.ht.titre)
+              membersAdded.push(membres[i].id);
             }
 
             // } else {
@@ -107,7 +110,7 @@ export class HistoireMembreChartComponent implements OnInit   {
             // }
             else {
               // Membre non présent, on l'ajoute au tableau des membres
-              membersAdded.push(membres[i].id);
+              
             }
             
             

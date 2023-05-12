@@ -1,11 +1,18 @@
-<div class="content" style="margin-top:5%;" >
-
+<div class="content" style="margin-top:4%;" >
+  <ng-container  *ngIf="sprintBacklogs.length == 0">
+  <h1 class="titre-zero">Aucun sprintBacklog pour le Moment</h1>
+  <img width="100%" style="margin-top:-9%" height="50%" src="./../../../assets/img/loading.gif" />
+  </ng-container>
 <ng-container  *ngFor="let sprintBacklog of sprintBacklogs;index as i;">
   <div style="margin-bottom:4%;" class="accordion"  [attr.id]="'accordionExample'+i"  >
     <div class="accordion-item">
       <h2 class="accordion-header " (click)="toggleAccordion(i)"  id="heading{{i}}">
-        <button class="accordion-button bg-danger" [disabled]="activeIndex !== i && activeIndex!=-1"  (click)="afficherDetailSprintBacklog(sprintBacklog)"  type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse'+i" aria-expanded="true" [attr.aria-controls]="'collapse'+i">
+        <button class="accordion-button bg-danger " [disabled]="activeIndex !== i && activeIndex!=-1"  (click)="afficherDetailSprintBacklog(sprintBacklog)"  type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse'+i" aria-expanded="true" [attr.aria-controls]="'collapse'+i">
           SprintBacklog #{{reverseIndex(i,sprintBacklogs.length)}}
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Objectif : {{sprintBacklog.sprint.objectif}}
         </button>
       </h2>
       <div [attr.id]="'collapse'+i" class="accordion-collapse bg-dark collapse "  aria-labelledby="heading{{i}}" [data-bs-parent]="'#accordionExample'+i">
@@ -87,15 +94,18 @@
                       </mat-card-content>
                       <hr>
                       <mat-card-footer>
-                        <div class="d-flex bd-highlight mb-1">
-                          <div class="p-2 bd-highlight"><mat-icon>av_timer</mat-icon></div>
-                          <div class="p-2 bd-highlight">{{ticketTache.dateLancement|date}}</div>
-                          <div class="ms-auto p-2 bd-highlight">
-                            <button mat-icon-button *ngIf="ticketTache.membreId==null" [matMenuTriggerFor]="menu" (click)="prendreTicket(ticketTache.id)" style="margin-top:-27%;border:1px solidblack;" aria-label="Example icon-button with a menu">
+                        <div class="d-flex justify-content-around">
+                          <div ><mat-icon>av_timer</mat-icon></div>
+                          <div >{{ticketTache.dateLancement|date}}</div>
+                          <div class="d-flex justify-content-between">
+                            <button mat-icon-button *ngIf="ticketTache.membreId==null" [matMenuTriggerFor]="menu" (click)="prendreTicket(ticketTache.id,task.key)" style="border:1px solidblack;" aria-label="Example icon-button with a menu">
                               <mat-icon>person_add</mat-icon>
                             </button>
-                            <button mat-icon-button *ngIf="ticketTache.membreId!=null" [matMenuTriggerFor]="menu" (click)="verifierPersPris(ticketTache.membre)" style="margin-top:-27%;border:1px solidblack;" aria-label="Example icon-button with a menu">
+                            <button mat-icon-button *ngIf="ticketTache.membreId!=null" [matMenuTriggerFor]="menu" (click)="verifierPersPris(ticketTache.membre)" style="border:1px solidblack;" aria-label="Example icon-button with a menu">
                               <mat-icon>how_to_reg</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="detacher tâche" *ngIf="ticketTache.membreId!=null" [matMenuTriggerFor]="menu" (click)="detacherMembreDeTache(ticketTache)" style="border:1px solidblack;" aria-label="Example icon-button with a menu">
+                              <mat-icon>clear</mat-icon>
                             </button>
                           </div>
                         </div>

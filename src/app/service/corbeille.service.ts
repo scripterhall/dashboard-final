@@ -28,4 +28,33 @@ export class CorbeilleService {
     return this.http.delete<void>(`${URL}/`+id,{params:params});
   }
 
+
+  viderCorbeille(){
+    return this.http.delete<void>(URL,{observe:'response'})
+    .pipe(
+      map(
+        response => {
+          if(response.status === 404)
+            return null
+          else 
+            return "votre corveille est vide"
+        }
+      )
+    )
+  }
+
+  regenererTacheSupprimer(ticketTache:TacheTicket){
+    return this.http.post<TacheTicket>(`${URL}`,ticketTache,{observe:'response'})
+    .pipe(
+      map(
+        reponse =>{
+          const tache:TacheTicket = reponse.body
+          if(reponse.status == 400)
+            return null 
+          return tache
+        }
+      )
+    )
+  }
+
 }

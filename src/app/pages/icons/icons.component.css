@@ -178,9 +178,7 @@ float: right;
   }
 
 
-#sprints, .card-body{
-background-color: rgb(231, 231, 231);
-}
+
 
 .font-icon-detail{
 border-color: green;
@@ -191,4 +189,25 @@ border-color: green;
   margin-top: 30px;
   padding: 0 10px;
   font-size: .7142em;
+}
+
+.btn-terminer{
+  border-radius: 5px;
+  border-color: #4CAF50;
+  background-color:transparent;
+  color: #fff;
+  font-family: monospace;
+  transition: all 1s;
+}
+
+.btn-terminer:hover{
+  background-color:#4CAF50;
+}
+
+.btn-done{
+  border-radius: 5px;
+  background-color:#4CAF50;;
+  color: #fff;
+  font-family: monospace;
+  transition: all 1s;
 }

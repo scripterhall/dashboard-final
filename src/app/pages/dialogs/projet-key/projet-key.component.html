@@ -1,0 +1,15 @@
+<h2 mat-dialog-title class="badge bg-infos">Projet {{data.projet.nom}}</h2>
+<mat-dialog-content class="d-flex">
+    <br>
+    <mat-form-field appearance="fill" class="w-75">
+        <mat-label>Clé de projet</mat-label>
+        <input matInput [formControl]="cles" placeholder="saisir le cles">
+        <mat-icon matSuffix>vpn_key</mat-icon>
+        <mat-error *ngIf="cles.hasError('required')">Ce champ est obligatoire</mat-error>
+      </mat-form-field>
+      <div mat-dialog-actions class="d-flex justify-content-around">
+        <button style="margin-left:3%;" (click)="confirmer()" mat-raised-button color="accent"  type="submit" [disabled]="this.cles.invalid">Confirmer</button>
+     </div>
+</mat-dialog-content>
+
+
