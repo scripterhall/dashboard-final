@@ -12,6 +12,8 @@ import { TicketTacheService } from 'src/app/service/ticket-tache.service';
 import Swal from 'sweetalert2';
 import { DialogData } from '../../icons/icons.component';
 import { CorbeilleService } from 'src/app/service/corbeille.service';
+import { WebSocketTicketTacheService } from 'src/app/service/web-socket-ticket-tache.service';
+import { Membre } from 'src/app/model/membre';
 
 
 
@@ -34,19 +36,43 @@ export class SprintDialogPanelComponent implements OnInit{
     private fb:FormBuilder,
     private corbeilleService:CorbeilleService,
     private sprintService:SprintService,
+    private webSocketTache:WebSocketTicketTacheService,
     private ticketTacheService:TicketTacheService,
     private histoireTicketService:HistoireTicketService,
     private sprintBacklogService:SprintBacklogService
     ){
+      this.webSocketTache.messageHandlingAdd(null).subscribe(
+        message =>{
+          console.log(message);
+          
+          if(message.subscribe && this.data.TicketHistoires.find(histoire => histoire.id == message.subscribe.ht.id)){
+            this.ticketTacheList.push(message.subscribe);
+          }
+        },
+        error =>{
+          console.log(error);
+        }
+      )
 
+      this.webSocketTache.messageHandlingSupprimer(null).subscribe(
+        message =>{
+          if(message.supprimer){
+            this.ticketTacheList.splice(this.ticketTacheList.indexOf(this.ticketTacheList.find(tache=>tache.id == message.supprimer.id)),1)
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      )
     }
 
     TicketTacheModif:FormGroup;
-
+    membre:Membre
   ngOnInit(): void {
     console.log(this.data.sprint);
     console.log(this.data.TicketHistoires);
-
+    if(localStorage.getItem("membre"))
+      this.membre = JSON.parse(localStorage.getItem("membre"));
     this.projet = JSON.parse(localStorage.getItem("projet"))
     this.TicketTacheModif = this.fb.group({
       id: ['', Validators.required],
@@ -215,7 +241,7 @@ export class SprintDialogPanelComponent implements OnInit{
               if (result.isConfirmed) {
                 this.corbeilleService.deleteTacheFromCorbeille(findTache.id,"local").subscribe(
                   data => {
-                    this.ticketTacheList.push(findTache);
+                    this.webSocketTache.messageHandlingAdd(findTache).subscribe()
                   }
                 );
               }else{
@@ -232,11 +258,12 @@ export class SprintDialogPanelComponent implements OnInit{
               console.log(data);
               this.ticketTacheService.affecterTicketAMembre(membre,data.id).subscribe(
                 dataTicket=>{
-                  console.log("affecter : ",dataTicket);    
+                  console.log("affecter : ",dataTicket);
+                  this.webSocketTache.messageHandlingAdd(dataTicket).subscribe()
+                  this.ajouterTick = false;
+                  this.ticketTacheForm.reset()    
                 })
-              this.ticketTacheList.push(data);
-              this.ajouterTick = false;
-              this.ticketTacheForm.reset()
+              
             },
             error => {
               Swal.fire(
@@ -257,7 +284,7 @@ export class SprintDialogPanelComponent implements OnInit{
     if(confirm('vous êtes sur de supprimer cette tâche !'))
       this.ticketTacheService.supprimerTicketTache(this.ticketTacheList[i].id).subscribe(
         data =>{
-          this.ticketTacheList.splice(i,1)
+          this.webSocketTache.messageHandlingSupprimer(this.ticketTacheList[i]).subscribe()
         }
       )
   }

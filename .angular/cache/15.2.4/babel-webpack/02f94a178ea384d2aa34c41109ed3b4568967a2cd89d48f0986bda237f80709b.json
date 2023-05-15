@@ -1,0 +1,1 @@
+{"ast":null,"code":"var Dossier = /** @class */function () {\n  function Dossier() {}\n  return Dossier;\n}();\nexport { Dossier };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

@@ -40,7 +40,14 @@
                </a>
               </mat-icon>
              
-              <div matListItemTitle class="folder-text">{{folder.nomDossier}}</div>
+              <div matListItemTitle class="folder-text ">
+                {{folder.nomDossier}}
+                <ng-container *ngIf="folder.membreId == membre?.id">
+                <button mat-mini-fab matTooltip="supprimer dossier"  (click)="supprimerDossier(folder)" class="p-2 bd-highlight text-danger btn">
+                  <mat-icon class="w-100 h-100">cancel</mat-icon>
+                </button>
+              </ng-container>
+              </div>
               <div matListItemLine class="text-light" style="font-size:10px" [matTooltip]="'emetteur : '+folder.membre.email">*{{folder.membre.nom}}*</div>
             
             </mat-list-item>

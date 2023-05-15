@@ -87,10 +87,13 @@
     color:rgba(255,255,255,0.3)
   }
 
-  .folder-text:hover{
-    cursor: pointer;
-
-  }
+  
   a{
     color:wheat;
+  }
+  .btn{
+    border-radius: 50%;
+    border:transparent;
+    background-color: transparent;
+    
   }

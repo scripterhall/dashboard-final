@@ -17,6 +17,7 @@ import { emailValidator, emailExistsValidator,roleExists } from './email-exists.
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjetKeyComponent } from '../dialogs/projet-key/projet-key.component';
+import { WebSocketInvitationService } from 'src/app/service/web-socket-invitation.service';
 
 export interface ExampleTab {
   label: string;
@@ -154,6 +155,7 @@ export class SelectProjetComponent implements OnInit {
               private roleService: RoleService,
               private invitationService: InvitationService,
               private membreService: MembreService,
+              private webSocketService:WebSocketInvitationService,
               private productBacklogService:ProductBacklogService,
               private router: Router) {
 
@@ -167,6 +169,8 @@ export class SelectProjetComponent implements OnInit {
         ]);
       }, 1000);
     });
+
+    
 
   }
 
@@ -273,6 +277,7 @@ step = 0;
 
         this.roleService.ajouterRole(role).subscribe(
           data => {
+           
             console.log("role : "+data);
             this.invitationForm.reset();
             this.rolePkForm.reset();

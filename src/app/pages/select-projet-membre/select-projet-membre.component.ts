@@ -24,8 +24,6 @@ export class SelectProjetMembreComponent implements OnInit {
     const membre = JSON.parse(localStorage.getItem('membre'))
     this.roleService.afficherListRoleParMembre(membre.id).subscribe(
       data =>{
-      console.log(data);
-      
         this.roles = data.filter(role => this.verifDate(role.invitation.dateExpiration) )
         for(let role of data)
           if( role.status == "ACCEPTE")

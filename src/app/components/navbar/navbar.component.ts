@@ -13,6 +13,7 @@ import { ToastrService } from "ngx-toastr";
 import Swal from "sweetalert2";
 import { MembreService } from "src/app/service/membre.service";
 import { SearchPanelComponent } from "src/app/pages/dialogs/search-panel/search-panel.component";
+import { WebSocketInvitationService } from "src/app/service/web-socket-invitation.service";
 
 export interface InvitationPanel{
   projet:Projet
@@ -43,10 +44,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private dialogInvitation: MatDialog,
     private dialogRecherche: MatDialog,
     private router: Router,
-    
   ) {
     this.location = location;
     this.sidebarVisible = false;
+    
   }
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
    updateColor = () => {
@@ -91,7 +92,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.roleService.afficherListRoleParMembre(this.membre.id).subscribe(
         data =>{
           data = data.filter(role => role.status=="ATTENTE")
-          this.listeRole = data
+          this.roleService.setRoles(data)
+          this.listeRole = this.roleService.getRoles()
         }
       )
 

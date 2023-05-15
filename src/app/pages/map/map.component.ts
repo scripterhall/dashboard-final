@@ -56,6 +56,10 @@ export class MapComponent implements OnInit {
     this.webSocketService.messageHandlingAdd(new TacheTicket()).subscribe(
       message => {
         console.log(message);
+        if(this.webSocketService.ticketTache)
+          this.taskMap.get(message.subscribe.ht).push(this.webSocketService.ticketTache)
+        
+
         if (message.subscribe) {
           const ticketHistoire = message.subscribe.ht
           for (const key of this.taskMap.keys()) {

@@ -3,8 +3,11 @@ import { Router } from "@angular/router";
 import * as JSZip from "jszip";
 import { ToastrService } from "ngx-toastr";
 import { Dossier } from "src/app/model/dossier";
+import { Membre } from "src/app/model/membre";
 import { AntiVerusService } from "src/app/service/anti-verus.service";
 import { DossierService } from "src/app/service/dossier.service";
+import { WebSocketDossierService } from "src/app/service/web-socket-dossier.service";
+import Swal from "sweetalert2";
 
 
 @Component({
@@ -24,9 +27,27 @@ export class TablesComponent implements OnInit {
     private dossierService:DossierService,
     private antiVerusService:AntiVerusService,
     private router: Router,
-  ) {}
-
+    private webSocketService:WebSocketDossierService
+  ) {
+    this.webSocketService.messageHandlingAddDos(null).subscribe(
+      message => {
+        if(message.subscribe && message.subscribe.projetId == JSON.parse(localStorage.getItem('projet')).id )
+         this.projetDos.push(message.subscribe)
+      }
+    )
+    this.webSocketService.messageHandlingSupprimerDos(null).subscribe(
+      message => {
+        console.log(message);
+        if(message.supprimer && this.projetDos.find(dos => dos.id == message.supprimer.id) && message.supprimer.projetId == JSON.parse(localStorage.getItem('projet')).id )
+         this.projetDos.splice(this.projetDos.indexOf(this.projetDos.find(dos => dos.id == message.supprimer.id)),1) 
+      }
+    )
+    
+  }
+  membre:Membre
   ngOnInit() {
+    if(localStorage.getItem("membre"))
+      this.membre = JSON.parse(localStorage.getItem("membre"))
     this.folderName = ""
     const projet = JSON.parse(localStorage.getItem('projet'))
     this.dossierService.recupererDossierDeProjet(projet.id).subscribe(
@@ -42,6 +63,7 @@ export class TablesComponent implements OnInit {
     )
   }
 
+  dos:Dossier
   onFileChange(event){
     const files = event.target.files;
     this.folderName = files[0].webkitRelativePath.split('/')[0];
@@ -101,7 +123,19 @@ export class TablesComponent implements OnInit {
       this.dossierService.sauvegarderDossier(dossier).subscribe(
         data => {
           if(data)
-           this.projetDos.push(data)
+           this.webSocketService.messageHandlingAddDos(data).subscribe(
+            (message) => {
+              // afficher le message reçu dans la console
+              console.log(message);
+             
+            },
+            (err) => {
+              console.error(err); // afficher les erreurs dans la console
+            },
+            () => {
+              console.log('WebSocket connection closed'); // afficher un message lorsque la connexion est fermée
+            }
+           )
         },
         error => {
           this.toastr.error("vous avez déjà inserer ce dossier")
@@ -110,6 +144,46 @@ export class TablesComponent implements OnInit {
       
       /** end */
    })
+  }
+
+
+  supprimerDossier(dossier:Dossier){
+    Swal.fire({
+      title: "Clé correct, vous êtes sûr de supprimer le dossier : "+dossier.nomDossier,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Oui, Lancer!',
+      cancelButtonText: 'Annuler',
+      background:'rgba(0,0,0,0.9)',
+      backdrop: 'rgba(0,0,0,0.4)',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      focusConfirm: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.dossierService.supprimerDos(dossier.id).subscribe(
+          data => {
+            //this.projetDos.splice(this.projetDos.indexOf(this.projetDos.find(dos => dos.id == dossier.id)),1) 
+            this.webSocketService.messageHandlingSupprimerDos(dossier).subscribe(
+              message => {
+                console.log(message);
+              }
+            )
+          },
+          error => {
+            Swal.fire(
+              'Erreur',
+              'suppression impossible ',
+              'error'
+            )
+          }
+        )
+      }
+    })
+   
   }
 
  

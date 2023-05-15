@@ -19,6 +19,7 @@ export class WebSocketTicketTacheService {
   message$: Observable<TacheTicket>;
   messageSupprimer$: Observable<TacheTicket>;
   messageModifier$: Observable<TacheTicket>;
+  ticketTache:TacheTicket
   
   connect() {
    this.ws = webSocket('ws://localhost:8093/tache'); 

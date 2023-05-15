@@ -5,6 +5,7 @@ import { TacheTicket } from 'src/app/model/tache-ticket';
 import { CorbeilleService } from 'src/app/service/corbeille.service';
 import { SprintBacklogService } from 'src/app/service/sprint-backlog.service';
 import { SprintService } from 'src/app/service/sprint.service';
+import { WebSocketTicketTacheService } from 'src/app/service/web-socket-ticket-tache.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -22,9 +23,21 @@ export class CorbeilleComponent implements OnInit {
 
   constructor(
     private corbeilleService: CorbeilleService,
-    private sprintService:SprintService,
-    private sprintBacklogService:SprintBacklogService
-  ){}
+    private sprintBacklogService:SprintBacklogService,
+    private webSocketTache:WebSocketTicketTacheService
+  ){
+
+    this.webSocketTache.messageHandlingAdd(null).subscribe(
+      message => {
+        if(message.subscribe){
+          this.webSocketTache.ticketTache = message.subscribe
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
  
 
 
@@ -149,6 +162,7 @@ export class CorbeilleComponent implements OnInit {
         this.corbeilleService.deleteTacheFromCorbeille(id,"global").subscribe(
           data => {
             console.log(data)
+            
             this.tacheSprintMap
             .get(sprintId)
             ?.splice(this.tacheSprintMap.get(sprintId).indexOf(tache),1)
@@ -181,7 +195,7 @@ export class CorbeilleComponent implements OnInit {
                   this.tacheSprintMap
                   .get(sprintId)
                   ?.splice(this.tacheSprintMap.get(sprintId).indexOf(tache),1)
-
+                  this.webSocketTache.messageHandlingAdd(tache).subscribe()
                   this.tacheSprintMapFiltred
                   .get(sprintId)
                   ?.splice(this.tacheSprintMapFiltred.get(sprintId).indexOf(tache),1)
@@ -206,7 +220,7 @@ export class CorbeilleComponent implements OnInit {
           this.tacheSprintMap
                   .get(sprintId)
                   ?.splice(this.tacheSprintMap.get(sprintId).indexOf(tache),1)
-
+                  this.webSocketTache.messageHandlingAdd(tache).subscribe()
                   this.tacheSprintMapFiltred
                   .get(sprintId)
                   ?.splice(this.tacheSprintMapFiltred.get(sprintId).indexOf(tache),1)
