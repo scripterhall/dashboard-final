@@ -429,10 +429,10 @@ removeUserStoryFromProductBacklog(id: number) {
 
   verifDate(sprint:Sprint){
     const aujourdhui = new Date()
-    sprint.dateLancement= new Date(sprint.dateLancement)    
-    return  sprint.dateLancement.getFullYear() === aujourdhui.getFullYear() &&
-    sprint.dateLancement.getMonth() === aujourdhui.getMonth() &&
-    sprint.dateLancement.getDate() === aujourdhui.getDate()&&
+    sprint.dateFin= new Date(sprint.dateFin)    
+    return  sprint.dateFin.getFullYear() === aujourdhui.getFullYear() &&
+    sprint.dateFin.getMonth() === aujourdhui.getMonth() &&
+    sprint.dateFin.getDate() === aujourdhui.getDate()&&
     aujourdhui.getHours()<23
   }
 

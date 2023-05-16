@@ -150,9 +150,16 @@ export class SprintDialogPanelComponent implements OnInit{
 
     if(confirm('vous êtes sur de detacher cette ticket histoire de sprint')){
       ht.sprintId = null
+      ht.sprint.velocite -= ht.effort
       this.histoireTicketService.DetacherHtSprint(ht).subscribe(
         dataHt =>{
             this.data.TicketHistoires.splice(i,1)
+            //decrementation de velocite de sprint
+            this.sprintService.modifierSprint(ht.sprint).subscribe(
+              sprintData =>{
+                this.data.sprint.velocite = sprintData.velocite
+              }
+            )
         }
       )
     }

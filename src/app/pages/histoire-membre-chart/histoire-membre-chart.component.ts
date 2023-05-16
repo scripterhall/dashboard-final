@@ -43,7 +43,9 @@ export class HistoireMembreChartComponent implements OnInit   {
   bubbleChartPlugins = [];
   chart: Chart 
   listMembre: Membre[];
-  listTicketHistoire:TicketHistoire[]=[];
+
+  //tache qui appartient au histoire
+  listTicketHistoire:TacheTicket[]=[];
   constructor(
     private dialog:MatDialog,
     private roleService: RoleService,
@@ -61,6 +63,8 @@ export class HistoireMembreChartComponent implements OnInit   {
     this.colors = colors
   }
 
+  taches:TacheTicket[]
+
   ngOnInit(): void {
     const idProjet = JSON.parse(localStorage.getItem('projet')).id
     console.log(idProjet);
@@ -75,8 +79,13 @@ export class HistoireMembreChartComponent implements OnInit   {
     ([roles,tickets])=>{
       //recuoerer les membre par role
       const membres:Membre[] = []
-      console.log(roles);
-      
+      let tableHistoire = []
+      this.taches = tickets
+      const tableHistoireId = Array.from(new Set(tickets.map((ticket) => ticket.ht.id)));
+      for(let tabId of tableHistoireId)
+       tableHistoire.push(tickets.find(ticket=>ticket.ht.id == tabId))
+      console.log(tableHistoire);
+      this.listTicketHistoire = tableHistoire
       this.generateColors(roles.length);
       for(let role of roles){
         if(role.status == "ACCEPTE")
@@ -84,51 +93,26 @@ export class HistoireMembreChartComponent implements OnInit   {
       }
         this.listMembre = membres
         console.log(membres);
-      
-      const bubbleChartData = [];
-      //ajouté dans le graphe 
-      const membersAdded = [];
-      const historiesAdded = [];
-      const labels:string[] = []
-      for (let i = 0; i < membres.length; i++) {
-        const  memberData = { data: [], label: membres[i].email, backgroundColor: this.colors[i], borderColor: this.colors[i] };
-        for (let j = 0; j < tickets.length; j++) {
-          const tache = tickets[j];
-          if (tache && tache.membreId === membres[i].id) {
-            const historyIndex = historiesAdded.find(histoire => histoire.id == tache.ht.id)
-            if (historyIndex == null) {
-              this.listTicketHistoire.push(tache.ht);
-              historiesAdded.push(tache.ht);
-              memberData.data.push({ x: i, y: tache.ht.id,r:10});
-              labels.push(tache.ht.titre)
-              membersAdded.push(membres[i].id);
+        const bubbleChartData = [];
+        for(let i =0;i<membres.length;i++){
+          const  memberData = { data: [], label: membres[i].email, backgroundColor: this.colors[i], borderColor: this.colors[i] };
+          for(let ticketTache of tickets){
+            if(memberData.data.find(axe => axe.y == ticketTache.ht.id) ){
+              continue
+            }else{
+              memberData.data.push({ x: i, y: ticketTache.ht.id,r:5});
             }
 
-            // } else {
-            //   // Histoire de ticket déjà présente, on ignore cette histoire de ticket et on passe à l'itération suivante
-              
-            // }
-            else {
-              // Membre non présent, on l'ajoute au tableau des membres
-              
-            }
-            
-            
           }
-        }
-        
           bubbleChartData.push(memberData);
-          console.log(bubbleChartData);
-          
-      }
-      console.log(membres);
+        }
       
       //conf
       const chartOptions = {
         scales: {
           yAxes: [{
             min:0,
-            max:historiesAdded.length,
+            max:tableHistoire.length,
             scaleLabel: {
             
               labelString: 'Histoire de ticket'
@@ -138,9 +122,9 @@ export class HistoireMembreChartComponent implements OnInit   {
               autoSkip:true,
               beginAtZero: false,
               stepsSize:1,
-              maxTicksLimit:historiesAdded.length, 
+              maxTicksLimit:tableHistoire.length, 
               callback :(value, index, values) => {
-                return   historiesAdded.find(histoire=>histoire.id == value).titre
+                return   tableHistoire[index].ht.titre
               }
             },
             gridLines: { 
@@ -159,10 +143,9 @@ export class HistoireMembreChartComponent implements OnInit   {
             },
             ticks: {
               stepSize: 1 ,
-              beginAtZero: true,
+              beginAtZero: false,
               min: 0, // La première valeur sera 0
-              max:membersAdded.length,
-              maxTicksLimit:membersAdded.length, 
+              max:membres.length,
               callback :(value, index, values) => { // Personnalisation des labels
                 return membres[index]?.email;
               }
@@ -181,10 +164,12 @@ export class HistoireMembreChartComponent implements OnInit   {
             label: (tooltipItem, data) => {
               const datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
               const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-            
               const memberName = membres[value.x].email;
-              const ticketTitle = historiesAdded.find(histoire=>histoire.id == value.y).titre
-              return `${memberName}: ${ticketTitle}`;
+              
+              const tacheFiltred = this.taches.filter(t => t.ht.id == value.y && t.membreId == this.listMembre[value.x].id)
+              console.log(this.taches);
+              
+              return `${memberName} -> nombre de Tâche ${tacheFiltred.length}`;
             }
           }
         },
@@ -231,6 +216,7 @@ export class HistoireMembreChartComponent implements OnInit   {
 
   handleChartClick(event, array) {
     const elements = this.chart.getElementAtEvent(event);
+   
     let member;
     let ticketHistoire;
     if (elements.length > 0) {
@@ -241,7 +227,8 @@ export class HistoireMembreChartComponent implements OnInit   {
       const dataIndexYaxe = elements[0]._index;
       //affectation des valuer
       member = this.listMembre[datasetIndex]
-      ticketHistoire = this.listTicketHistoire[dataIndexYaxe] 
+      
+      ticketHistoire = this.listTicketHistoire[dataIndexYaxe].ht 
     }
     
     if (array.length > 0) {
