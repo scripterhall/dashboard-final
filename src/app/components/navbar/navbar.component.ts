@@ -287,9 +287,43 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   navigationProjet(){
+    let membre
+    let chefProjet
+    if(localStorage.getItem("membre"))
+       membre = JSON.parse(localStorage.getItem("membre"))
+    if(localStorage.getItem("chef-projet"))
+       chefProjet = JSON.parse(localStorage.getItem("chef-projet"))
+    if(chefProjet){
+      this.router.navigateByUrl('/liste-projet')
+      localStorage.removeItem("projet")
+    }
+    else{
+      this.router.navigateByUrl('/liste-projet-membre')
+      localStorage.removeItem("role")
+      localStorage.removeItem("projet")
 
+    }
   }
   logOut(){
+    Swal.fire({
+      title: "vous êtes sûr de déconnecter",
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'deconnecter',
+      cancelButtonText: 'Annuler',
+      backdrop: 'rgba(0,0,0,0.4)',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      focusConfirm: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear()
+        this.router.navigateByUrl('/auth')
+      }
+    })
     
   }
 

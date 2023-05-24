@@ -5,7 +5,7 @@ import { TicketHistoire } from '../model/ticket-histoire';
 import { map } from 'rxjs';
 import { Membre } from '../model/membre';
 const URL = "http://localhost:9999/membre-service/membres"
-const URL2 = "http://localhost:9999/inscription-service/auth"
+const URL2 = "http://localhost:9999/inscription-service/inscription"
 
 
 @Injectable({

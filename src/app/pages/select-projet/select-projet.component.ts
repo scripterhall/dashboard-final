@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjetKeyComponent } from '../dialogs/projet-key/projet-key.component';
 import { WebSocketInvitationService } from 'src/app/service/web-socket-invitation.service';
+import { ChefProjet } from 'src/app/model/chef-projet';
 
 export interface ExampleTab {
   label: string;
@@ -53,7 +54,7 @@ export class SelectProjetComponent implements OnInit {
     ["scrum master","vous êtes chargé d'assurer que\nScrum est compris et mis en œuvre. "]
   ]);
 
-
+  chefProjet:ChefProjet
   emailLocal:string
   valid:boolean=false;
   /*   formulaire d'ajout de projet   */
@@ -70,7 +71,8 @@ export class SelectProjetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  
+    if(localStorage.getItem("chef-projet"))
+      this.chefProjet = JSON.parse(localStorage.getItem("chef-projet"))
     this.rolePkForm = this.formBuilder2.group({
       membreId:null,
       projetId:[null,Validators.required]
