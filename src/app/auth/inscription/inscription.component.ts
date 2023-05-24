@@ -21,7 +21,7 @@ export class InscriptionComponent implements OnInit {
   personneFormGroup:FormGroup
   chefProjetFormGroup:FormGroup
   membreFormGroup:FormGroup
- 
+  membre:Membre
 
   private trigger: Subject<any> = new Subject();
   public webcamImage!: WebcamImage;
@@ -34,7 +34,8 @@ export class InscriptionComponent implements OnInit {
               private chefProjetService: ChefProjetServiceService) {}
   type = new FormControl('',[Validators.required]);
   ngOnInit(): void {
-
+    if(localStorage.getItem("membre"))
+      this.membre  = JSON.parse(localStorage.getItem("membre"))
 
     this.personneFormGroup = this.formBuilder.group({
       nom:["",Validators.required], 
@@ -115,6 +116,7 @@ export class InscriptionComponent implements OnInit {
 
 
   enregistrerMembre(membre:Membre){
+
     this.membreService.inscription(membre).subscribe(
       data => {
           Swal.fire(
@@ -123,6 +125,8 @@ export class InscriptionComponent implements OnInit {
             'success'
           ).then(
             result=>{
+              if(localStorage.getItem("membre"))
+                localStorage.removeItem("membre")
               this.router.navigateByUrl('/auth')
             }
           )
@@ -130,7 +134,7 @@ export class InscriptionComponent implements OnInit {
       error =>{
         Swal.fire(
           'Attention !',
-          'Vous avez déjà un compte',
+          'erreur d\'inscription',
           'error'
         )
       }
@@ -156,7 +160,7 @@ export class InscriptionComponent implements OnInit {
         if(!data)
           Swal.fire(
             'Attention !',
-            'Vous avez déjà un compte',
+            'erreur d\'inscription',
             'error'
           )
         console.log(data);

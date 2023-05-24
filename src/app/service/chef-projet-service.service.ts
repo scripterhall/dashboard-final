@@ -4,7 +4,7 @@ import { map } from 'rxjs';
 import { ChefProjet } from '../model/chef-projet';
 
 const url1 = "http://localhost:9999/gestion-chefProjet-service/chef-projets"
-const URL2 = "http://localhost:9999/inscription-service/auth"
+const URL2 = "http://localhost:9999/inscription-service/inscription"
 
 @Injectable({
   providedIn: 'root'
